@@ -1,0 +1,42 @@
+JFDML JFormDesigner: "7.0.2.6.321" Java: "11.0.8" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :p:40:p, par t {seq {comp inputLabel:::p::p, space :::p, comp delayInput:::p:99:p}, seq l {comp btnSave:::p::p, space :::p, comp btnCancel:::p::p}}, space :p:40:p}}"
+			"$verticalGroup": "par l {seq {space :p:40:p, par b {comp inputLabel::b:p::p, comp delayInput::b:p::p}, space s:::p, par b {comp btnSave::b:p::p, comp btnCancel::b:p::p}, space :p:40:p}}"
+		} ) {
+			name: "this"
+			"background": new java.awt.Color( 255, 255, 255, 255 )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "inputLabel"
+				"text": "Delay Time:"
+				"horizontalAlignment": 0
+				"font": new java.awt.Font( "Tempus Sans ITC", 0, 16 )
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "delayInput"
+				"font": new java.awt.Font( "Tempus Sans ITC", 1, 16 )
+				"background": new java.awt.Color( 208, 223, 240, 255 )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnSave"
+				"text": "SAVE"
+				"font": &Font0 new java.awt.Font( "Tempus Sans ITC", 1, 16 )
+				"background": &Color0 new java.awt.Color( 208, 223, 240, 255 )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnSaveActionPerformed", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnCancel"
+				"text": "CANCEL"
+				"font": #Font0
+				"background": #Color0
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnCancelActionPerformed", true ) )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 180, 40 )
+			"size": new java.awt.Dimension( 270, 200 )
+		} )
+	}
+}
