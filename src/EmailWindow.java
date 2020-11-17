@@ -9,8 +9,8 @@ import java.util.*;
 public class EmailWindow {
     // TODO: Add email (create) and password; Turn security -> allow access to less secure apps on for the google account
     private static final String SMTP_HOST_NAME = "smtp.gmail.com";  // for google
-    protected static final String SMTP_AUTH_USER = "new-email";              // Username
-    private static final String SMTP_AUTH_PWD  = "password";              // Password
+    protected static final String SMTP_AUTH_USER = "adsprojectiiita";              // Username
+    private static final String SMTP_AUTH_PWD  = "adsprojectiiita3rdsem";              // Password
 
     // Add List of Email address to who email needs to be sent to
     public void postMail( String recipients[ ], String subject,
