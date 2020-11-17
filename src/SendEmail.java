@@ -17,7 +17,7 @@ public class SendEmail {
 
     private void initialize() {
         frame = new JFrame();
-        frame.setBounds(100, 100, 500, 550);
+        frame.setBounds(100, 100, 500, 450);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
@@ -61,11 +61,11 @@ public class SendEmail {
 
         JButton btnCancel = new JButton("Cancel");
 
-        btnCancel.setBounds(312, 387, 100, 25);
+        btnCancel.setBounds(312, 350, 100, 25);
         frame.getContentPane().add(btnCancel);
 
         JButton btnSubmit = new JButton("Submit");
-        btnSubmit.setBounds(65, 387, 100, 25);
+        btnSubmit.setBounds(65, 350, 100, 25);
         frame.getContentPane().add(btnSubmit);
 
         btnSubmit.addActionListener(new ActionListener() {
