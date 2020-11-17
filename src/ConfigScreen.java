@@ -13,34 +13,45 @@ import javax.swing.*;
  * @author Varun Tiwari
  */
 public class ConfigScreen extends JDialog {
-    public ConfigScreen(Window owner, float delayTime) {
+    public ConfigScreen(Window owner, long delayTime) {
         super(owner);
-        this.delayTime=delayTime;
+        this.CloseTime=delayTime;
+        this.openTime=delayTime;
         setResizable(false);
         initComponents();
-        delayInput.setText(Float.toString(delayTime));
     }
 
-    private float delayTime;
+    private long openTime,CloseTime;
 
-    public float getDelayTime() {
-        return delayTime;
+
+    public long getOpenTime() {
+        return openTime;
     }
 
-    public void setDelayTime(float delayTime) {
-        this.delayTime = delayTime;
+    public void setOpenTime(long openTime) {
+        this.openTime = openTime;
+    }
+
+    public long getCloseTime() {
+        return CloseTime;
+    }
+
+    public void setCloseTime(long closeTime) {
+        CloseTime = closeTime;
     }
 
     private void btnSaveActionPerformed(ActionEvent e) {
         // TODO add your code here
-        String inputString=delayInput.getText();
-        if(!inputString.isEmpty()){
-            float data=Float.parseFloat(inputString);
-            if(!Float.isNaN(data)){
-                setDelayTime(data);
-                processWindowEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
-            }
+        String input1, input2;
+        input1=openTimeInput.getText();
+        if(!input1.isEmpty()){
+            setOpenTime(Long.parseLong(input1));
         }
+        input2=closeTimeInput.getText();
+        if(!input2.isEmpty()){
+            setCloseTime(Long.parseLong(input2));
+        }
+        processWindowEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
     }
 
     private void btnCancelActionPerformed(ActionEvent e) {
@@ -51,76 +62,86 @@ public class ConfigScreen extends JDialog {
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Varun Tiwari
-        inputLabel = new JLabel();
-        delayInput = new JTextField();
+        openTimeInputLabel = new JLabel();
+        openTimeInput = new JTextField();
         btnSave = new JButton();
         btnCancel = new JButton();
+        closeTimeInputLable = new JLabel();
+        closeTimeInput = new JTextField();
 
         //======== this ========
         setBackground(Color.white);
         var contentPane = getContentPane();
+        contentPane.setLayout(null);
 
-        //---- inputLabel ----
-        inputLabel.setText("Delay Time:");
-        inputLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        inputLabel.setFont(new Font("Tempus Sans ITC", Font.PLAIN, 16));
+        //---- openTimeInputLabel ----
+        openTimeInputLabel.setText("Door Open Time (in Milliseconds):");
+        openTimeInputLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        openTimeInputLabel.setFont(new Font("Tempus Sans ITC", Font.PLAIN, 16));
+        contentPane.add(openTimeInputLabel);
+        openTimeInputLabel.setBounds(new Rectangle(new Point(40, 45), openTimeInputLabel.getPreferredSize()));
 
-        //---- delayInput ----
-        delayInput.setFont(new Font("Tempus Sans ITC", Font.BOLD, 16));
-        delayInput.setBackground(new Color(208, 223, 240));
+        //---- openTimeInput ----
+        openTimeInput.setFont(new Font("Tempus Sans ITC", Font.BOLD, 16));
+        openTimeInput.setBackground(new Color(208, 223, 240));
+        contentPane.add(openTimeInput);
+        openTimeInput.setBounds(290, 40, 99, openTimeInput.getPreferredSize().height);
 
         //---- btnSave ----
         btnSave.setText("SAVE");
         btnSave.setFont(new Font("Tempus Sans ITC", Font.BOLD, 16));
         btnSave.setBackground(new Color(208, 223, 240));
         btnSave.addActionListener(e -> btnSaveActionPerformed(e));
+        contentPane.add(btnSave);
+        btnSave.setBounds(new Rectangle(new Point(125, 115), btnSave.getPreferredSize()));
 
         //---- btnCancel ----
         btnCancel.setText("CANCEL");
         btnCancel.setFont(new Font("Tempus Sans ITC", Font.BOLD, 16));
         btnCancel.setBackground(new Color(208, 223, 240));
         btnCancel.addActionListener(e -> btnCancelActionPerformed(e));
+        contentPane.add(btnCancel);
+        btnCancel.setBounds(new Rectangle(new Point(245, 115), btnCancel.getPreferredSize()));
 
-        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
-        contentPane.setLayout(contentPaneLayout);
-        contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addGap(40, 40, 40)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addComponent(inputLabel)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(delayInput, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE))
-                        .addGroup(GroupLayout.Alignment.LEADING, contentPaneLayout.createSequentialGroup()
-                            .addComponent(btnSave)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnCancel)))
-                    .addGap(40, 40, 40))
-        );
-        contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addGap(40, 40, 40)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(inputLabel)
-                        .addComponent(delayInput, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addGap(18, 18, 18)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnSave)
-                        .addComponent(btnCancel))
-                    .addGap(40, 40, 40))
-        );
-        pack();
+        //---- closeTimeInputLable ----
+        closeTimeInputLable.setText("Door Close Time (in Milliseconds:");
+        closeTimeInputLable.setHorizontalAlignment(SwingConstants.CENTER);
+        closeTimeInputLable.setFont(new Font("Tempus Sans ITC", Font.PLAIN, 16));
+        contentPane.add(closeTimeInputLable);
+        closeTimeInputLable.setBounds(40, 80, 235, 22);
+
+        //---- closeTimeInput ----
+        closeTimeInput.setFont(new Font("Tempus Sans ITC", Font.BOLD, 16));
+        closeTimeInput.setBackground(new Color(208, 223, 240));
+        contentPane.add(closeTimeInput);
+        closeTimeInput.setBounds(290, 75, 99, 32);
+
+        {
+            // compute preferred size
+            Dimension preferredSize = new Dimension();
+            for(int i = 0; i < contentPane.getComponentCount(); i++) {
+                Rectangle bounds = contentPane.getComponent(i).getBounds();
+                preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
+                preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
+            }
+            Insets insets = contentPane.getInsets();
+            preferredSize.width += insets.right;
+            preferredSize.height += insets.bottom;
+            contentPane.setMinimumSize(preferredSize);
+            contentPane.setPreferredSize(preferredSize);
+        }
+        setSize(425, 210);
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner Evaluation license - Varun Tiwari
-    private JLabel inputLabel;
-    private JTextField delayInput;
+    private JLabel openTimeInputLabel;
+    private JTextField openTimeInput;
     private JButton btnSave;
     private JButton btnCancel;
+    private JLabel closeTimeInputLable;
+    private JTextField closeTimeInput;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

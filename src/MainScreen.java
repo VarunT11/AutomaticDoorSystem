@@ -11,13 +11,13 @@ import javax.swing.GroupLayout;
 /**
  * @author Varun Tiwari
  */
-public class MainScreen extends JFrame {
+public class MainScreen extends JFrame implements DataListenerInterface {
 
     private boolean automaticStart;
-    private final float defaultDelay=2;
+    private final long defaultDelay=3000;
     private ConfigScreen configScreen;
     private DoorState currentState, previousState;
-    private ImagePanel imagePanel;
+    private ControlSystem controlSystem;
 
     public boolean isAutomaticStart() {
         return automaticStart;
@@ -34,34 +34,61 @@ public class MainScreen extends JFrame {
     public MainScreen() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-        imagePanel=new ImagePanel();
         initComponents();
         currentState=DoorState.Closed;
         previousState=DoorState.Closed;
         configScreen=new ConfigScreen(getOwner(),defaultDelay);
-        addPersonInput();
         updateDetailsPanel();
         setAutomaticStart(false);
+        controlSystem=new ControlSystem(this,configScreen.getOpenTime(),configScreen.getCloseTime());
+        
+        btnOpenDoor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(automaticStart)
+                    controlSystem.OpenDoor();
+            }
+        });
+        
+        btnCloseDoor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (automaticStart)
+                    controlSystem.CloseDoor();
+            }
+        });
+
+        btnEmergOpen.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(automaticStart){
+                    controlSystem.OpenDoor();
+                    setAutomaticStart(false);
+                }
+            }
+        });
+
+        btnEmergClose.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(automaticStart){
+                    controlSystem.CloseDoor();
+                    setAutomaticStart(false);
+                }
+            }
+        });
+        
     }
 
     private void updateDetailsPanel(){
         currentStatus.setText(currentState.toString());
         previousStatus.setText(previousState.toString());
     }
-
-    private void addPersonInput(){
-        for(PersonInput input:PersonInput.values())
-            inputPerson.addItem(input);
-    }
+    
 
     private void btnQuitActionPerformed(ActionEvent e) {
         // TODO add your code here
         processWindowEvent(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
-    }
-
-    private void inputPersonItemStateChanged(ItemEvent e) {
-        // TODO add your code here
-
     }
 
     private void btnStartActionPerformed(ActionEvent e) {
@@ -95,10 +122,10 @@ public class MainScreen extends JFrame {
         btnEmergOpen = new JButton();
         btnEmergClose = new JButton();
         btnQuit = new JButton();
-        inputLabel = new JLabel();
-        inputPerson = new JComboBox();
         statusLabel = new JLabel();
         automaticStatus = new JTextField();
+        btnOpenDoor = new JButton();
+        btnCloseDoor = new JButton();
 
         //======== this ========
         setForeground(new Color(238, 238, 238));
@@ -201,15 +228,6 @@ public class MainScreen extends JFrame {
         btnQuit.setBackground(new Color(208, 223, 240));
         btnQuit.addActionListener(e -> btnQuitActionPerformed(e));
 
-        //---- inputLabel ----
-        inputLabel.setText("Person Input:");
-        inputLabel.setFont(new Font("Tempus Sans ITC", Font.BOLD, 18));
-
-        //---- inputPerson ----
-        inputPerson.setFont(new Font("Tempus Sans ITC", Font.PLAIN, 16));
-        inputPerson.setBackground(new Color(208, 223, 240));
-        inputPerson.addItemListener(e -> inputPersonItemStateChanged(e));
-
         //---- statusLabel ----
         statusLabel.setText("Automatic Status");
         statusLabel.setFont(new Font("Tempus Sans ITC", Font.BOLD, 16));
@@ -219,6 +237,16 @@ public class MainScreen extends JFrame {
         automaticStatus.setBackground(new Color(208, 223, 240));
         automaticStatus.setEditable(false);
         automaticStatus.setHorizontalAlignment(SwingConstants.CENTER);
+
+        //---- btnOpenDoor ----
+        btnOpenDoor.setText("Open Door");
+        btnOpenDoor.setBackground(new Color(208, 223, 240));
+        btnOpenDoor.setFont(new Font("Tempus Sans ITC", Font.BOLD, 16));
+
+        //---- btnCloseDoor ----
+        btnCloseDoor.setText("Close Door");
+        btnCloseDoor.setBackground(new Color(208, 223, 240));
+        btnCloseDoor.setFont(new Font("Tempus Sans ITC", Font.BOLD, 16));
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
@@ -232,26 +260,19 @@ public class MainScreen extends JFrame {
                             .addGap(0, 0, Short.MAX_VALUE)
                             .addComponent(btnQuit))
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGroup(contentPaneLayout.createParallelGroup()
+                            .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addComponent(statusLabel)
                                 .addGroup(contentPaneLayout.createSequentialGroup()
-                                    .addGroup(contentPaneLayout.createParallelGroup()
-                                        .addComponent(statusLabel)
-                                        .addComponent(btnChangeConfig))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(btnStart)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnOff))
+                                .addComponent(automaticStatus, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
                                 .addGroup(contentPaneLayout.createSequentialGroup()
-                                    .addGroup(contentPaneLayout.createParallelGroup()
-                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                            .addComponent(btnStart)
-                                            .addGap(39, 39, 39)
-                                            .addComponent(btnOff)
-                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(inputLabel)
-                                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(inputPerson))
-                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                            .addComponent(automaticStatus, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
-                                            .addGap(319, 319, 319)))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)))
+                                    .addComponent(btnOpenDoor)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnCloseDoor))
+                                .addComponent(btnChangeConfig, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 214, Short.MAX_VALUE)
                             .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                 .addGroup(contentPaneLayout.createSequentialGroup()
                                     .addComponent(btnEmergOpen)
@@ -278,11 +299,11 @@ public class MainScreen extends JFrame {
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnChangeConfig))
                         .addComponent(displayPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addComponent(inputLabel)
-                        .addComponent(inputPerson, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGap(18, 18, 18)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnOpenDoor)
+                        .addComponent(btnCloseDoor))
+                    .addGap(12, 12, 12)
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(btnEmergOpen)
                         .addComponent(btnEmergClose))
@@ -310,9 +331,28 @@ public class MainScreen extends JFrame {
     private JButton btnEmergOpen;
     private JButton btnEmergClose;
     private JButton btnQuit;
-    private JLabel inputLabel;
-    private JComboBox inputPerson;
     private JLabel statusLabel;
     private JTextField automaticStatus;
+    private JButton btnOpenDoor;
+    private JButton btnCloseDoor;
+
+    @Override
+    public void updateData(DoorState doorState) {
+        previousStatus.setText(doorState.toString());
+        switch (controlSystem.getDoorState()){
+            case Open -> {
+                currentStatus.setText("Open");
+            }
+            case CurrentlyOpening -> {
+                currentStatus.setText("Currently Opening - "+controlSystem.getOpenPercent()+"% Open");
+            }
+            case CurrentlyClosing -> {
+                currentStatus.setText("Currently Closing - "+controlSystem.getClosePercent()+"% Closed");
+            }
+            case Closed -> {
+                currentStatus.setText("Closed");
+            }
+        }
+    }
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
